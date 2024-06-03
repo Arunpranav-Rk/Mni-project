@@ -1,0 +1,56 @@
+df = pd.read_csv('ipldataset.csv')
+df.head()
+df.shape
+df.columns
+df['Team1'].value_counts()
+df1 = df.applymap(lambda x : 'Rising Pune Supergiants' if x == 'Rising Pune Supergiant' 
+else x)
+t1 = df1['Team1'].value_counts()
+t2 = df1['Team2'].value_counts()
+num_matches = pd.concat((t1,t2) , axis=1).sum(axis=1)
+num_matches.plot.bar(figsize = (13,7))
+plt.ylabel("No.of Matches Played")
+top_players = df1.groupby('Player_of_Match').size().sort_values(ascending = False)[:10]
+top_players.plot.barh()
+df1.groupby('WinningTeam').size().sort_values(ascending=False)
+tosswins = df1.groupby('TossWinner').size().sort_values(ascending = False)
+colors = ['red' , 'green' , 'yellow' , 'purple' , 'orange' , 'pink' , 'brown']
+plt.figure(figsize = (14,7))
+plt.bar(range(len(tosswins)) , tosswins , color = colors)
+plt.xticks(range(len(tosswins)) , tosswins.index , rotation = 90)
+plt.show()
+df1.head(11)
+finalWins = df1[df1['MatchNumber'] == 'Final'].WinningTeam.value_counts()
+finalWins
+values = finalWins.values
+max_finals = finalWins.idxmax()
+#print(max finals)
+max_index = finalWins.index.tolist().index(max_finals)
+#print(max index)
+explode = [0] * len(finalWins.index)
+explode[max_index] = 0.1
+#print(explode[max index])
+#print(explode)
+plt.pie(values , labels = finalWins.index , explode = explode , shadow=True , autopct = 
+'%1.1f%%')
+plt.title('Team with most final wins')
+plt.show()
+(df1['TossWinner'] == df1['WinningTeam']).sum() / len(df1)
+totaltosswin = df1['TossWinner'].value_counts()
+totaltosswin
+tossmatchwin = df1[df1['TossWinner'] == df1['WinningTeam']]
+totaltossmatchwin = tossmatchwin.WinningTeam.value_counts()
+totaltossmatchwin
+totaltossmatchwin.plot(kind = 'pie' , autopct = '%.2f' , figsize=(15,6))
+ts = pd.concat((totaltossmatchwin , totaltosswin) , axis = 1)
+ts.columns = ['wins' , 'tosswins']
+ts
+df1['Margin'].hist()
+dfb = pd.read_csv('ipldata.csv')
+dfb.head()
+batsmanStats = dfb.groupby('batter')['total_run'].sum().sort_values(ascending = 
+False).head(10)
+batsmanStats
+bowlerStats = dfb.groupby('bowler')['isWicketDelivery'].sum().sort_values(ascending = 
+False).head(10)
+bowlerStats
